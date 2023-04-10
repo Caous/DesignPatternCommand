@@ -1,156 +1,174 @@
 # Designer Pattern Command / Padrão de projeto Comandos
 
-Projeto com finalidade em mostrar o padrão de projeto Mediator com implementação
+Projeto com finalidade em mostrar o padrão de projeto Comandos com implementação
 
-![Mediator](https://refactoring.guru/images/patterns/content/mediator/mediator.png?id=0264bd857a231b6ea2d0c537c092e698)
+![Command](https://refactoring.guru/images/patterns/content/command/command-comic-1.png?id=551df832f445080976f3116e0dc120c9)
 
 
 ### <h2>Fala Dev, seja muito bem-vindo
-   Está POC é para mostrar como podemos implementar o Design Pattern Mediator/Padrão de Projeto Mediador em diversos projetos com adaptação para o cenário que você precisar e contiver códigos legados ou evoluções no estilo MVP, também te explico o que é o Design Pattern Mediator/Padrão de Projeto Mediador e como usar em diversas situações. Espero que encontre o que procura <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> 
+   Está POC é para mostrar como podemos implementar o Design Pattern Command/Padrão de Projeto Comando em diversos projetos com adaptação para o cenário que você precisar ou até mesmo combinação de Pattern, também te explico o que é o Design Pattern Command/Padrão de Projeto Comando e como usar em diversas situações. Espero que encontre o que procura <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> 
 </em></p></h5>
   
   </br>
   
 
 
-<img align="right" src="https://methodpoet.com/wp-content/uploads/2022/06/mediator-pattern-solution.png" width="300" height="300"/>
+<img align="right" src="https://refactoring.guru/images/patterns/content/command/command-pt-br.png?id=36096f8c2cd7783284eb80ce92db1a96" width="400" height="400"/>
 
 
 </br></br>
 
-### <h2>Mediator <a href="https://refactoring.guru/pt-br/design-patterns/mediator" target="_blank"><img alt="Mediator" src="https://img.shields.io/badge/Mediator-blue?style=flat&logo=google-chrome"></a>
+### <h2>Command <a href="https://refactoring.guru/pt-br/design-patterns/command" target="_blank"><img alt="Mediator" src="https://img.shields.io/badge/Command-blue?style=flat&logo=google-chrome"></a>
 
- <a href="https://refactoring.guru/pt-br/design-patterns/mediator" target="_blank">Design Pattern Mediator ou Padrão de Projeto Mediador </a> é um padrão de projeto para <b>resolver um problema que já foi encontrado por outras pessoas</b>, sendo assim por este problema ter se repetido diversas vezes, criaram-se um padrão de solução ou como costumamos dizer Padrão de Projeto / Design Pattern para resolver este problema.
+ <a href="https://refactoring.guru/pt-br/design-patterns/command" target="_blank">Design Pattern Command ou Padrão de Projeto Comando </a> é um padrão de projeto para <b>resolver um problema que já foi encontrado por outras pessoas</b>, sendo assim por este problema ter se repetido diversas vezes, criaram-se um padrão de solução ou como costumamos dizer Padrão de Projeto / Design Pattern para resolver este problema.
  
 Esse padrão de projeto pode ser utilizado <b>INDIFERENTE DA LINGUAGEM DE PROGRAMAÇÃO</b>, ou seja, pode ser aplicado em qualquer lugar. Mas fica um <b>Ponto de Atenção</b> para vocês, só implementem realmente se fizer sentido.
  
-Design Pattern Mediator tem como objetivo centralizar códigos que precisam de complemento de outros, ou seja, uma ação quando solicitada, precisar processar outro código/classe, ao invés de termos uma classe chamando a outra, temos um centralizador. Desta forma pense que o Mediator é uma forma de arbitro pronto para orquestra o jogo da forma que precisa, ele é responsável por cada ação que acontece, ou seja, se uma falta for cometida ele dá um cartão, advertência, se alguém for ser trocado durante o jogo, ele também irá orquestrar e chamar os responsáveis para tal ação acontecer com sucesso.
+Design Pattern Command tem como objetivo utilizar um pedido da aplicação para transformar em um objeto, recebendo os parâmetros para aquele objeto. Essa transformação permite que você parametrize métodos com diferentes pedidos, atrase ou coloque a execução do pedido em uma fila, e suporte operações que não podem ser feitas.
 
-Sendo assim Mediator utiliza 3 Pilares:
-
-<b>Mediator</b> A interface do Mediador declara métodos de comunicação com os componentes, os quais geralmente incluem apenas um método de notificação.
+   Desta forma podemos pensar na <b>segregação de responsabilidades</b>, aonde por exemplo um front-end se necessitar mostrar ao usuário a rota até sua casa, logo ele precisa passar o processamento para o back-end que contem toda regra de negócio. Desta forma ao <b>invés do back-end acessar diretamente a classe ou intermediador passando os parâmetros, ele envia um pedido do tipo Rota, passando a origem e chegada, e o back-end fica responsável pelo restante</b>. De agora em diante, o objeto <b>GUI não precisa saber qual objeto de lógica do negócio irá receber o pedido e como ele vai ser processado</b>. O objeto GUI deve acionar o comando, que irá lidar com todos os detalhes então podemos ter diversos pontos chamando o mesmo comando ou comandos diferentes.
    
-<b>Concrete</b> Os Mediadores Concretos encapsulam as relações entre vários componentes. Os mediadores concretos quase sempre mantém referências de todos os componentes os quais gerenciam e, algumas vezes, até gerenciam o ciclo de vida deles.
+ Agora vamos te explicar a nível de código, nossa estrutura se divide em algumas camadas como:
    
-<b>Componentes</b> Os Componentes são várias classes que contém alguma lógica de negócio.
+   °<b>Invoker</b> é responsável por iniciar os pedidos. Essa classe deve ter um campo para armazenar a referência para um objeto comando. O remetente aciona aquele comando ao invés de enviar o pedido diretamente para o destinatário.
+   
+   °<b>Interface Command</b> com objetivo de ter apenas um único método que é executar o command <b> algumas pessoas utilizam com mais um comando UNDO</b>, para cancelar o pedido
+   
+   °<b>Comandos Concretos</b> implementam vários tipos de pedidos. Um comando concreto não deve realizar o trabalho por conta própria, mas passar a chamada para um dos objetos da lógica do negócio. Contudo, para simplificar o código, essas classes podem ser fundidas.
+   
+   °<b>Destinatária</b> contém a lógica do negócio. Quase qualquer objeto pode servir como um destinatário.
+   
+   °<b>Client</b> cria e configura objetos comando concretos. O cliente deve passar todos os parâmetros do pedido, incluindo uma instância do destinatário, para o construtor do comando. Após isso, o comando resultante pode ser associado com um ou múltiplos destinatários.
+   
 
-Legal né? Mas agora a pergunta é como posso usar o Mediator? Abaixo dou um exemplo de caso de uso.
+Legal né? Mas agora a pergunta é como posso usar o Command? Abaixo dou um exemplo de caso de uso.
 
 </br></br>
 
 ### <h2>[Cenário de Uso]
-Vamos imaginar o seguinte cenário, você tem uma oficina onde sua oficina tem o serviço de <b>ordem de serviço </b>, mas dentro da sua oficina você tem diversos serviços (catálogo) e cada serviço que chega, você tem uma regra de negócio para ele, validar por exemplo se está faltando peça, se precisa de reposição etc... Como você poderia centralizar a chamada de cada serviço sem que na sua tela (Windows Form/Asp.net Web) do seu projeto implemente todas as classes fazendo uma mistura e acessos diretos que talvez nem deveria ocorrer devido a arquitetura do projeto? Esse é o objetivo do Mediator, saber quem será chamado.
+Vamos imaginar o seguinte cenário, você tem uma <b>casa com diversar integrações com seus objetos</b>, desta forma, você sempre passa <b>comandos para serem executados</b> como você deseja, desta forma chegando ao objetivo que você deseja, ligar uma tomada ou até mesmo ligar a luz do quarto e desligar do banheiro. Como você poderia fazer esses comandos serem interpretados com parametros e suas particularidades. Esse é o objetivo do Command, executar o seu pedido e outra camada ficar responsável pela verdadeira regra de negócio.
 
 ### <h2> Criação de Classes
 
-Vamos criar a interface que contém os métodos necessários para chamada dos componentes.
+Vamos criar a classe command que é responsável por iniciar e configurar os commandos
 ```C#
-   public interface IMediator
-   {
-    void Notify(object sender, EServico servicos);
-   }
+  public class Alexa
+{
+    private ICommand _command;
+
+    public void SetStarCommand(ICommand starCommand) => _command = starCommand;
+    public void ExecuteCommand() => _command.Execute();
+    public void UndoCommand() => _command.Undo();
+
+}
 ```
 
-Próxima etapa é criarmos a classe context que terá o método de notify e conhece todas classes necessárias.
+Próxima etapa é criarmos interface com os comandos que teremos.
 ```C#
 
-///Classe que implementa o IMediator
- public class ConcreteMediator : IMediator
-   {
-    private readonly EsteticaServico _estetica;
-    private readonly FreioServico _freio;
-    private readonly OleoServico _oleo;
-
-    public ConcreteMediator(EsteticaServico estetica, FreioServico freio, OleoServico oleo)
-    {
-        _estetica = estetica;
-        _estetica.SetMediator(this);
-        _freio = freio;
-        _freio.SetMediator(this);
-        _oleo = oleo;
-        _oleo.SetMediator(this);
-    }
-    public void Notify(object sender, EServico servicos)
-    {
-
-        switch (servicos)
-        {
-            case EServico.Freios:
-                _freio.CriarOrdemServico();
-                break;
-            case EServico.Oleo:
-                _oleo.CriarOrdemServico();
-                break;
-            case EServico.Estetica:
-                _estetica.CriarOrdemServico();
-                break;
-            default:
-                break;
-        }
-
-
-    }
-   }
+ public interface ICommand
+  {
+    void Execute();
+    void Undo();
+  }
 ```
 </br>
 
-Agora vamos criar nossa classes de negócio.
+Agora vamos criar as classes que vão conter a implementação dos comandos mas não a verdadeira regra de negócio
 ```C#
-   public class EsteticaServico : OrdemServicoBase
+  public class CoffePotCommand : ICommand
    {
-      public EsteticaServico(string servico, IMediator mediator = null) : base(servico, mediator)
-      {
-      }
+    private readonly Coffe coffe;
 
-      public void ServicoEfetuado()
-      {
-           Console.WriteLine($"Servico efetuado as {DateTime.Now} {base.CriarOrdemServico()}");
-           this._mediator.Notify(this, Enumeradores.EServico.Estetica);
-      }
+    public CoffePotCommand(Coffe coffe)
+    {
+        this.coffe = coffe;
+    }
+    public void Execute()
+    {
+        coffe.SetOnOrOffCoffe(true);
+        Console.WriteLine($"Coffe Id: { coffe.Id} status : {coffe.GetOnOrOfCoffe()} and start type Coffe: {coffe.TypeCoffe}");
+    }
 
+    public void Undo()
+    {
+        coffe.SetOnOrOffCoffe(false);
+        Console.WriteLine($"Coffe Id: {coffe.Id} status : {coffe.GetOnOrOfCoffe()}");
+    }
    }
    
-   public class FreioServico : OrdemServicoBase
+   public class LightOnCommand : ICommand
    {
-      public FreioServico(string servico, IMediator mediator = null) : base(servico, mediator)
-      {
-      }
+    private readonly Light light;
 
-      public void ServicoEfetuado()
-      {
-        Console.WriteLine($"Servico efetuado as {DateTime.Now} {CriarOrdemServico()}");
-        this._mediator.Notify(this, EServico.Estetica);
-      }
+    public LightOnCommand(Light light)
+    {
+        this.light = light;
+    }
+    public void Execute()
+    {
+        light.SetOnOrOffLight(true);
+        Console.WriteLine($"Id: {light.Id} light of Enviroment: {light.Enviroments} this {light.GetOnOrOfLight()}");
+    }
+
+    public void Undo()
+    {
+        light.SetOnOrOffLight(false);
+        Console.WriteLine($"Id: {light.Id} light of Enviroment: {light.Enviroments} this {light.GetOnOrOfLight()}");
+    }
    }
 
-   public class OleoServico : OrdemServicoBase
+   public class TvCommand : ICommand
    {
-      public OleoServico(string servico, IMediator mediator = null) : base(servico, mediator)
-      {
-      }
-      public void ServicoEfetuado()
-      {
-        Console.WriteLine($"Servico efetuado as {DateTime.Now} {CriarOrdemServico()}");
-        this._mediator.Notify(this, EServico.Estetica);
-      }
+    private readonly Tv tv;
+
+    public TvCommand(Tv tv)
+    {
+        this.tv = tv;
+    }
+    public void Execute()
+    {
+        tv.SetOnOrOffTv(true);
+        Console.WriteLine($"Id: {tv.Id} TV of Enviroment: {tv.Enviroments} this {tv.GetOnOrOfTv()}");
+    }
+
+    public void Undo()
+    {
+        tv.SetOnOrOffTv(false);
+        Console.WriteLine($"Id: {tv.Id} TV of Enviroment: {tv.Enviroments} this {tv.GetOnOrOfTv()}");
+    }
    }
 ```
 
-E por ultimo a implementação.
+E <b> neste caso não criamos uma receive por não ter necessidade de abstrair a regra de negócio</b> por ultimo a implementação.
 
 ```C#
-using MediatorDesignPattern.Mediator;
-using MediatorDesignPattern.Servicos;
+Alexa invoke = new Alexa();
 
-EsteticaServico esteticaServico = new EsteticaServico("Vidrificação");
-FreioServico freioServico = new FreioServico("Troca pastilho de freio");
-OleoServico oleoServico = new OleoServico("Troca de oléo");
+Guid guid = Guid.NewGuid();
 
-new ConcreteMediator(esteticaServico, freioServico, oleoServico);
+invoke.SetStarCommand(new CoffePotCommand(new Coffe(guid, ETypeCoffe.Express)));
 
-esteticaServico.ServicoEfetuado();
-freioServico.ServicoEfetuado();
-oleoServico.ServicoEfetuado();
+invoke.ExecuteCommand();
+
+invoke.UndoCommand();
+
+guid = Guid.NewGuid();
+
+invoke.SetStarCommand(new TvCommand(new Tv(guid, "bedroom")));
+
+invoke.ExecuteCommand();
+
+invoke.UndoCommand();
+
+guid = Guid.NewGuid();
+
+invoke.SetStarCommand(new LightOnCommand(new Light(guid, "bathroom")));
+
+invoke.ExecuteCommand();
+
+invoke.UndoCommand();
+
 ```
 
 
